@@ -1,0 +1,41 @@
+# message-triage configuration
+
+model:
+  # Used only when ANTHROPIC_API_KEY is set. Offline runs ignore this and use
+  # the deterministic stand-in in src/llm.py.
+  name: claude-sonnet-5
+  max_tokens: 1024
+
+triage:
+  # Urgency classes, most to least urgent. The deterministic emergency gate in
+  # src/redflags.py sits above these; an "emergency" label here is a soft signal.
+  classes: [emergency, urgent, routine]
+  # Default classifier for the demo: "baseline" (scikit-learn) or "llm".
+  default_method: baseline
+
+summarize:
+  # A condensed question that introduces more than this many content words the
+  # message never used is flagged for a closer look (possible invented detail).
+  max_novel_terms: 2
+
+reply:
+  # Every draft requires a clinician to approve before it can be sent. There is
+  # no configuration that turns this off.
+  require_approval: true
+
+eval:
+  # The headline metric is red-flag recall; the target is near 1.0. A single
+  # missed emergency is treated as a failure, not a rounding error.
+  red_flag_recall_target: 1.0
+
+data:
+  # Datasets this tool evaluates against. See data/prepare.py for access.
+  datasets:
+    - name: meqsum          # condense the message to its real question (open)
+      home: https://huggingface.co/datasets/sumedh/MeQSum
+    - name: pmr-bench       # message urgency labels (gated, accept terms)
+      home: https://github.com/abachaa
+    - name: medredqa        # reply drafting, registration + DUA, research only
+      home: https://sites.google.com/view/medredqa
+    - name: medredflag      # misconception "correct, don't affirm" probe
+      home: https://github.com/abachaa

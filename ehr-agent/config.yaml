@@ -1,0 +1,31 @@
+# ehr-agent configuration.
+#
+# Every value here has a sensible default in code; this file documents the knobs
+# and lets you change them without editing source.
+
+model:
+  # The model used when ANTHROPIC_API_KEY is set. Offline, a deterministic mock
+  # stands in and this value is ignored.
+  name: claude-sonnet-5
+  max_tokens: 1024
+
+agent:
+  # Hard cap on loop iterations. The loop always terminates within this budget.
+  max_steps: 6
+
+fhir:
+  # Offline default: the in-memory synthetic store (no network, no keys).
+  backend: in-memory
+  # To point at a real FHIR R4 server, set backend: http and this base URL,
+  # then swap the store body as shown in src/fhir.py. Public R4 test server:
+  #   https://hapi.fhir.org/baseR4
+  # Self-hosted HAPI FHIR default:
+  #   http://localhost:8080/fhir
+  base_url: http://localhost:8080/fhir
+
+safety:
+  # The agent proposes only. Committing an approved draft is a separate,
+  # human-triggered action. These flags document the invariants the eval checks.
+  agent_may_write: false
+  require_rationale: true
+  require_evidence: true

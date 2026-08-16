@@ -1,0 +1,32 @@
+# documentation — configuration
+#
+# Defaults are read by nothing automatically; they document the knobs the code
+# exposes as function arguments, so you can see and change them in one place.
+
+model:
+  # Used by AnthropicLLM when ANTHROPIC_API_KEY is set. With no key, the tool
+  # runs on the deterministic offline stand-in (MockLLM) instead.
+  name: claude-sonnet-5
+  max_tokens: 1024
+
+grounding:
+  # TF-IDF cosine similarity at or above this counts a drafted sentence as
+  # supported by its source snippet. Below it, the sentence is flagged.
+  support_threshold: 0.20
+
+simplify:
+  # Target patient reading level for the plain-English rewrite (Flesch-Kincaid
+  # grade). Roughly a 6th-to-8th grade band.
+  target_reading_grade: 8.0
+  # A dropped safety warning blocks release regardless of the reading score.
+  block_on_dropped_warning: true
+
+data:
+  # Open, credential-free simplification corpora (see data/prepare.py).
+  simplification_corpora:
+    - PLABA        # NLM plain-language adaptation of biomedical abstracts
+    - Med-EASi     # expert-annotated medical simplification
+    - Cochrane-auto  # aligned Cochrane plain-language summaries (per-source terms)
+  # The clinical-summary corpora (pre-brief, discharge) are MIMIC-derived and
+  # credentialed; the shipped offline demo uses synthetic PHI-free notes instead.
+  clinical_summary_note: "MIMIC-derived corpora are credentialed; demo uses synthetic notes."

@@ -1,0 +1,28 @@
+# scribe configuration
+
+model:
+  # Used only when ANTHROPIC_API_KEY is set. Offline runs ignore this.
+  name: claude-sonnet-5
+  max_tokens: 1024
+
+scribe:
+  # A note sentence whose best transcript match scores below this cosine
+  # similarity is flagged "unsupported" (possible confabulation).
+  support_threshold: 0.18
+  # Max supporting transcript lines shown per note sentence.
+  max_evidence: 3
+
+eval:
+  # A reference-note fact counts as "covered" if some generated sentence
+  # reaches this similarity; below it, the fact is scored as an omission.
+  coverage_threshold: 0.18
+
+data:
+  # Open benchmarks the tool evaluates against. See data/prepare.py.
+  datasets:
+    - name: aci-bench      # ~207 encounters with reference notes
+      home: https://github.com/wyim/aci-bench
+    - name: mts-dialog     # ~1,700 dialogue/summary pairs
+      home: https://github.com/abachaa/MTS-Dialog
+    - name: primock57      # 57 consults WITH audio, transcripts, notes
+      home: https://github.com/babylonhealth/primock57

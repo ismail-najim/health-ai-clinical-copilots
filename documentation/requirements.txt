@@ -1,0 +1,6 @@
+anthropic==0.121.0
+scikit-learn==1.9.0
+numpy==2.4.6
+textstat==0.7.13
+gradio==4.44.1
+pytest==9.1.1

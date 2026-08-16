@@ -1,0 +1,35 @@
+# guideline-cds configuration
+# Offline defaults need no key and no network. Set a key and switch the corpus
+# fields for real use.
+
+model:
+  # Used only when ANTHROPIC_API_KEY is set; otherwise the offline stand-in runs.
+  name: claude-sonnet-5
+  max_tokens: 700
+
+retrieval:
+  top_k: 3
+  # Cosine floor below which a hit counts as no match, so off-topic questions
+  # retrieve nothing and the flow abstains.
+  min_score: 0.05
+
+gate:
+  # The citation gate deletes any clinical sentence whose citation is missing or
+  # not present in the retrieved context. There is no soft mode.
+  abstain_message: "Not enough evidence to answer from the available guidelines."
+
+corpus:
+  # Offline: a small built-in example set (src/corpus.py).
+  source: builtin
+  # Real use: the open guideline corpus on Hugging Face, filtered to its
+  # redistributable sources.
+  huggingface_dataset: epfl-llm/guidelines
+  redistributable_sources: [cdc, who, wikidoc]
+
+tools:
+  uspstf:
+    base_url: https://data.uspreventiveservicestaskforce.org/api/json
+    key_env: USPSTF_KEY        # free registration
+  openfda:
+    base_url: https://api.fda.gov/drug/label.json
+    key_env: OPENFDA_KEY       # optional, only raises the rate limit
